@@ -1,0 +1,977 @@
+50 Productive and Practical grep Command for Linux Enthusiasts
+The grep tool in Linux and other Unix-like systems is one of the most powerful command-line tools ever developed. It dates back to the ed command g/re/p and is created by the legendary Ken Thompson. If you’re a seasoned Linux user, you’ll know the importance of regular expressions in file processing. However, many starting users simply don’t have a clue about them. We often see users being uncomfortable using such techniques. However, most grep commands aren’t that complex. You can easily master grep by giving it some time. If you want to become a Linux guru, we recommend you to utilize this tool in everyday computing.
+
+Essential grep Commands for Modern Linux Users
+
+One of the most beautiful things about Linux grep command is that you can use it with all sorts of things. You can grep for patterns directly in files or from your standard output. It allows users to pipe other command’s output to grep and locate specific information. The following commands will outline 50 such commands.
+
+Demo Files for Illustrating Linux grep Commands
+
+Since Linux grep utility works on files, we’ve outlined some files you can use for practicing. Most Linux distributions should contain some dictionary files in the /usr/share/dict directory. We’ve used the american-english file found here for some of our demonstration purposes. We’ve also created a simple text file containing the following.
+
+this is a sample file
+it contains a collection
+
+of lines to demonstrate
+various Linux grep commands
+We named it test.txt and have used in for many grep examples. You can copy the text from here and use the same filename for practicing. Additionally, we’ve also leveraged the /etc/passwd file.
+
+intro to linux grep command
+
+Basic grep Examples
+
+Since grep command allows users to dig out information using a plethora of combinations, starting users are often confused with its usage. We demonstrate some basic grep examples to help you familiarize yourself with this tool. It will help you learn more advanced commands in the future.
+
+1. Locate Information in Single File
+
+One of the basic use of grep in Linux is to locate lines containing specific information from files. Simply enter the pattern followed by the filename after grep, as shown below.
+
+$ grep root /etc/passwd
+$ grep $USER /etc/passwd
+The first example will display all lines containing root in the /etc/passwd file. The second command will display all such lines that contain your username.
+
+2. Locate Information in Multiple Files
+
+You can use grep to print lines containing specific patterns from more than one file at the same time. Simply provide all filenames separated by whitespace after the pattern. We’ve copied test.txt and created another file containing the same lines but named test1.txt.
+
+$ cp test.txt test1.txt
+$ grep file test.txt test1.txt
+Now grep will print all lines containing file from both of the files.
+
+3. Print Matched Portion Only
+
+By default, grep will display the entire line containing the pattern. You can suppress this output and tell grep to display only the matched portion. So, grep will only output the specified patterns, if it exists.
+
+$ grep -o $USER /etc/passwd
+$ grep --only-matching $USER /etc/passwd
+This command will output the value of $USER as many times grep encounters it. If no match is found, the output will be empty and grep will terminate.
+
+4. Ignore Case Matching
+
+By default, grep will search for the given pattern in a case sensitive manner. Sometimes the user might not be sure of the pattern’s case. You can tell grep to ignore the case of the pattern in such cases, as demonstrated below.
+
+$ grep -i $USER /etc/passwd
+$ grep --ignore-case $USER /etc/passwd
+
+$ grep -y $USER /etc/passwd
+This returns an extra line of output in my terminal. It should also be the same in your machine. The last command is obsolete so avoid using that one.
+
+5. Invert Matching grep Patterns
+
+The grep utility allows users to invert matching. It means that grep will print all lines that do not contain the given pattern. Check out the below command for a quick view.
+
+$ grep -v file test.txt
+$ grep --invert-match file test.txt
+The above commands are equivalent and print only those lines that do not contain the file.
+
+6. Match Whole Words Only
+
+The grep utility prints any line containing the pattern. So it will also print lines that have the pattern inside arbitrary words or sentences. Often you’ll want to discard these values. You can easily do this using the -w option, as shown below.
+
+$ grep hello /usr/share/dict/american-english
+$ grep -w hello /usr/share/dict/american-english
+If you run them one after another, you’ll see the difference. In my system, the first command returns 5 lines whereas the second command only two.
+
+match whole words
+
+7. Count the Number of Matches
+
+Often you might simply want the number of matches found using some pattern. The -c option is very handy in such situations. When it is used, grep returns the number of matches instead of printing the lines. We’ve added this flag to the above commands to help you visualize how this works.
+
+$ grep -c hello /usr/share/dict/american-english
+$ grep -c -w hello /usr/share/dict/american-english
+The commands return 5 and 2 respectively.
+
+8. Display Line Number
+
+You can instruct grep to display the line numbers where a match has been found. It utilizes a 1-based index where the first line of the file is line number 1 and the tenth line is line number 10. Take a look at the below commands to understand how this works.
+
+$ grep -n -w cat /usr/share/dict/american-english
+$ grep --line-number -w cat /usr/share/dict/american-english
+Both the above commands print the lines that contain the word cat in the american-english dictionary.
+
+9. Suppress Filename Prefixes
+
+If you run the examples of the second command again, you’ll notice that grep prefixes the output with the filenames. Often you may want to ignore them or omit them altogether. The following Linux grep commands will illustrate this for you.
+
+$ grep -h file test.txt test1.txt
+$ grep --no-filename file test.txt test1.txt
+Both of the above commands are equivalent so you can choose whichever you want. They will only return the lines with the matched pattern, not the filenames.
+
+10. Display Filename Prefixes Only
+
+On the other hand, sometimes you may only want the filenames that contain some pattern. You can use the -l option for this. The long-form of this option is –files-with-matches.
+
+$ grep -l cat /usr/share/dict/*-english
+$ grep --files-with-matches cat /usr/share/dict/*-english
+Both the above commands print out the filenames that contain the pattern cat. It shows the american-english and british-english dictionaries as grep’s output in my terminal.
+
+11. Read Files Recursively
+
+You can tell grep to read all the files in a directory recursively using the -r or –recursive option. This will print out all lines that contain the match and prefix them with the filenames where they were found.
+
+$ grep -r -w cat /usr/share/dict
+This command will output all files that contain the word cat in it alongside their filenames. We’re using the /usr/share/dict location since it already contains multiple dictionary files. The -R option can be used for allowing grep to traverse symbolic links.
+
+12. Display Matches with the Whole Pattern
+
+You can also instruct grep to display only those matches that contain the exact match in the entire line. For example, the below command will generate lines that only contains the word cat.
+
+$ grep -r -x cat /usr/share/dict/
+$ grep -r --line-regexp cat /usr/share/dict/
+They simply return the three lines that contain just cat in my dictionaries. My Ubuntu 19.10 has three files in the /dict directory containing the word cat in a single line.
+
+Regular Expressions in Linux grep Command
+
+One of the most compelling features of grep is its ability to work with complex regular expressions. We’ve only seen some basic grep examples illustrating many of its options. However, the ability to process files based on regular expressions is far more demanding. Since regular expressions require thorough technical study, we’ll stick with simple examples.
+
+13. Select Matches at Beginning
+
+You can use grep to specify a match at the start of a line only. This is called anchoring the pattern. You’ll need to utilize the caret ‘^’ operator for this purpose.
+
+$ grep "^cat" /usr/share/dict/american-english
+The above command will print all the lines in the Linux american-english dictionary that starts with cat. We didn’t use quotes to specify our patterns until this part of our guide. However, we’ll use them now on and recommend you to use them as well.
+
+14. Select Matches at Ending
+
+Similarly to the above command, you can also anchor your pattern to match lines containing pattern at the end. Check out the below command to understand how this works in Linux grep.
+
+$ grep "fish$" /usr/share/dict/american-english
+This command will print out all lines that end in fish. Notice how we’ve used the $ symbol at the end of our pattern in this case.
+
+match at ending
+
+15. Match a Single Character
+
+The Unix grep utility allowers users to match any single character as part of the pattern. The dot ‘.’ operator is used for this purpose. Take a look at the below examples for a better understanding.
+
+$ grep -x "c.t" /usr/share/dict/american-english
+This command will print all of the lines containing three character words beginning with c and ending with t. If you omit the -x option, the output will grow really large since grep will display all lines that have any combination of these characters. You can use double .. to specify two random characters and such.
+
+16. Match from a Set of Characters
+
+You can also choose from a set of characters easily using brackets. It tells grep to select characters based on some criteria. You’ll usually use regular expressions to specify these criteria.
+
+$ grep "c[aeiou]t" /usr/share/dict/american-english 
+$ grep -x "m[aeiou]n" /usr/share/dict/american-english
+The first example will print all lines in the american-english dictionary which contain the pattern c followed by a single vowel, and the character t. The next example will print all exact words that contain m followed by a vowel then n.
+
+17. Match from a Range of Characters
+
+The following commands will demonstrate how can you match from a range of characters using grep. Try out the commands on your own to see how things work.
+
+$ grep "^[A-Z]" /usr/share/dict/american-english
+$ grep "[A-Z]$" /usr/share/dict/american-english
+The first example will print out all lines that start with any capital letter. The second command displays only those lines that end with a capital letter.
+
+18. Omit Characters in Patterns
+
+Sometime you may want to search for patterns that do not contain some specific character. We’ll show you how to do this using grep in the next example.
+
+$ grep -w "[^c]at$" /usr/share/dict/american-english
+$ grep -w "[^c][aeiou]t" /usr/share/dict/american-english
+The first command displays all words ending with at except cat. The [^c] tells grep to omit the character c from its search. The second example tells grep to display all words that end with a vowel followed by t and doesn’t contain c.
+
+19. Group Characters inside Pattern
+
+The [] only allows you to specify a single character set. Although you can use multiple bracket sets for specifying additional characters, it’s not suitable if you already know what character groups you’re interested in. Thankfully, you can use the () to group multiple characters in your patterns.
+
+$ grep -E "(copy)" /usr/share/dict/american-english
+$ egrep "(copy)" /usr/share/dict/american-english
+The first command outputs all lines that have the character group copy in them. The -E flag is required. You can use the second command egrep if you want to omit this flag. It’s simply an extended front-end for grep.
+
+20. Specify Optional Characters in Pattern
+
+The grep utility also allows users to specify optional characters for their patterns. You’ll need to use the “?” symbol for this. Anything preceding that character will be optional in your pattern.
+
+$ grep -E "(commu)?nist" /usr/share/dict/american-english
+This command will print the word communist alongside all lines in the dictionary that contains nist in them. See how the -E option is used here. It enables grep to perform more complex or extended pattern matching.
+
+optional match using grep
+
+21. Specify Repetitions in Pattern
+
+You can specify how many times a pattern needs to be matched for certain grep commands. The following commands show you how to select the number of characters from a class for grep patterns.
+
+$ grep -E "[aeiou]{3}" /usr/share/dict/american-english
+$ grep -E "c[aeiou]{2}t" /usr/share/dict/american-english
+The first example will print all lines that contain three vowels whereas on the other hand, the last example prints all lines containing c followed by 2 vowels then t.
+
+22. Specify One or More Repetitions
+
+You can also utilize the “+” operator included in grep’s extended feature set for specifying a match one or more times. Check out the following commands to see how this works in Linux grep command.
+
+$ egrep -c "[aeiou]+" /usr/share/dict/american-english
+$ egrep -c "[aeiou]{3}" /usr/share/dict/american-english
+The first command prints out the number of times grep encounters one or more consecutive vowels. And the second command shows how many lines contain three consecutive vowels. There should a big margin of difference.
+
+23. Specify Lower Bound for Repetitions
+
+You can select both higher bound and lower bound for the number of match repetitions. The next examples demonstrate how to select lower bounds in action.
+
+$ egrep "[aeiou]{3,}" /usr/share/dict/american-english
+We’ve used egrep instead of grep -E for the above command. It selects all lines that contain 3 or more consecutive vowels.
+
+24. Specify Upper Bound for Repetitions
+
+As with lower bounds, you can also tell grep how many times to match certain characters at most. The following example matches all lines in the american-english dictionary that contains up to 3 vowels.
+
+$ egrep "[aeiou]{,3}" /usr/share/dict/american-english
+We recommend users to use egrep for these extended functionalities since it is somewhat faster and more of a convention nowadays. Notice the placement of the comma ‘,’ symbol in the two aforementioned commands.
+
+25. Specify Upper and Lower Bound
+
+The grep utility also enables users to select both the upper bound and lower bound for match repetitions at the same time. The following command tells grep to match all words containing minimum two and at most four consecutive vowels.
+
+$ egrep "[aeiou]{2,4}" /usr/share/dict/american-english
+This way you can specify both upper and lower limits at the same time.
+
+26. Select All Characters
+
+You can use the wildcard character ‘*’ to select all zero or more occurrences of a character class in your grep patterns. Check out the next example to understand how this works.
+
+$ egrep "collect*" test.txt 
+$ egrep "c[aeiou]*t /usr/share/dict/american-english
+The first example prints out the word collection since it’s the only word that matches ‘collect’ one or more times in the test.txt file. The last example matches all lines containing c followed by any number of vowels, then t in the Linux american-english dictionary.
+
+27. Alternate Regular Expressions
+
+The grep utility allows users to specify alternating patterns. You can use the “|” character for instructing grep to select one of two patterns. This character is known as the infix operator in POSIX terminology. Take a look at the below example to understand its effect.
+
+$ egrep "[AEIOU]{2}|[aeiou]{2}" /usr/share/dict/american-english
+This command tells grep to match all lines that either contain 2 consecutive capital vowels or small vowels.
+
+28. Select Pattern for Matching Alphanumeric Characters
+
+Alphanumeric patterns contain both digits and letters. The below examples demonstrate how to select all lines that contain alphanumerics using the grep command.
+
+$ egrep "[0-9A-Za-z]{3}" /usr/share/dict/american-english
+$ egrep "[[:alnum:]]{3}" /usr/share/dict/american-english
+Both of the above commands do the same thing. We’re telling grep to match all lines containing three consecutive character combination of 0-9, A-Z, and a-z. However, the second example saves us from writing the pattern specifier ourselves. This is called a special expression and grep offers several of them.
+
+alphanumeric expression in grep command
+
+29. Escape Special Characters
+
+Till now we’ve used many special characters such as “$”, “^”, and “|” for defining extended regular expressions. But what if you need to match any of those characters inside your pattern. Luckily, the developers of grep have already thought of that and allow to escape these special characters using the backslash “\”.
+
+$ egrep "\-" /etc/passwd
+The above command matches all lines of the /etc/passwd file against the hyphen “-“ character and prints them. You can escape any other special characters using a backslash in this way.
+
+30. Repeat grep Patterns
+
+You’ve already used the “*” wildcard to select character strings in your patterns. The next command shows you how to print out all lines that start with parentheses and only contain letters and single whitespace. We’ll use “*” to do this.
+
+$ egrep "([A-Za-z ]*)" test.txt
+Now add some lines enclosed within parentheses inside your demo file test.txt and run this command. You should get the hang of this command already.
+
+Linux grep Commands in Everyday Computing
+
+One of the best things about grep is its universal applicability. You can use this command to filter out essential information when running important Linux terminal commands. Although the below section provides you a quick glimpse into some of them, you can apply the core principles anywhere.
+
+31. Display all Sub-directories
+
+The following command illustrates how we can use grep to match all folders inside a directory. We’re using the ls -l command to display the contents of the directory in the standard output and cutting the matching lines with grep.
+
+$ ls -l ~ | grep "drw"
+Since all directories in Linux contains the pattern drw in their beginning, we’re using this as our pattern for grep.
+
+32. Display all Mp3 Files
+
+The following command demonstrates how to use grep for locating mp3 files in your Linux machine. We’ll be using the ls command again here.
+
+$ ls /path/to/music/dir/ | grep ".mp3"
+First, ls will print the contents of your music directory to the output and then grep will match all lines that contain .mp3 in them. You’ll not see the output of ls since we’ve piped this data to grep directly.
+
+33. Search Text in Files
+
+You can also utilize grep to search specific text patterns in a single file or collection of files. Suppose you want to locate all C program files that contain the text main in them. Don’t worry about this, you can always grep for it.
+
+$ grep -l 'main' /path/to/files/*.c
+By default, grep should color code the match portion to help you easily visualize your findings. However, if it fails to do so in your Linux machine, try adding the –color option to your command.
+
+34. Find Network Hosts
+
+The /etc/hosts file contains information like host IP and hostname. You can use grep to find specific information from this entry using the below command.
+
+$ grep -E -o "([0-9]{1,3}[\.]){3}[0-9]{1,3}" /etc/hosts
+Don’t be alarmed if you don’t get the pattern right away. If you break it down one by one, it’s very easy to understand. Actually, this pattern searches for all matches in the range 0.0.0.0 and 999.999.999.999. You can also search using hostnames.
+
+35. Find Installed Packages
+
+Linux sits on top of several libraries and packages. The dpkg command-line tool allows admins to control packages on Debian-based Linux distros such as Ubuntu. You’ll see below how we use grep to filter out essential information about a package using dpkg.
+
+$ dpkg --list | grep "chrome"
+It brings out several useful information in my machine including the version number, architecture, and description of the Google Chrome Browser. You can use it for finding information for packages installed in your system similarly.
+
+packages and images
+
+36. Find Available Linux Images
+
+We’re using the grep utility once more with the dpkg command in order to find all available Linux images. The output of this command will vary widely across systems.
+
+$ dpkg --list | grep linux-image
+This command simply prints out the result of dpkg –list and feeds it to grep. It then matches all lines for the given pattern.
+
+37. Find Model Information for CPU
+
+The below command demonstrates how to locate CPU model information in Linux-based systems using the grep command.
+
+$ cat /proc/cpuinfo | grep -i 'model'
+$ grep -i "model" /proc/cpuinfo
+In the first example, we’ve piped the output of cat /proc/cpuinfo to grep and matched all lines containing the word model. However, since /proc/cpuinfo is itself a file, you can use grep directly on it as shown by the latter example.
+
+38. Find Log Information
+
+Linux saves all sorts of logs in the /var directory for us system admins. You can easily grep useful information from these log files. The below command demonstrates a simple such example.
+
+$ grep -i "cron" /var/log/auth.log
+This command will inspect the /var/log/auth.log file for potential lines that contain information about Linux CRON jobs. The -i flag allows us to be more flexible. Running this command display all lines with the word CRON in the auth.log file.
+
+39. Find Process Information
+
+The next command will demonstrate how can we locate useful information for system processes using grep. A process is the running instance of a program in Linux machines.
+
+$ ps auxww | grep 'guake'
+This command will print all information related to the guake package. Try with some other package if guake isn’t available in your machine.
+
+40. Select Valid IPs Only
+
+Earlier we’ve used a relatively simpler regular expression for matching IP addresses from the /etc/hosts file. However, that command would also match a lot of invalid IPs since valid IPs can only take the values from the range (1-255) in each of their four-quadrant.
+
+$ egrep '\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' /etc/hosts
+The above command will not print any invalid IP addresses like 999.999.999.999.
+
+41. Search Inside Compressed Files
+
+The zgrep front-end of Linux grep command allows us top search for patterns directly in compressed files. Take a quick look at the following code snippets for a better understanding.
+
+$ gzip test.txt
+$ zgrep -i "sample" test.txt.gz
+First, we’re compressing the test.txt file using gzip and then utilizing zgrep to search it for the word sample.
+
+42. Count Number of Empty Lines
+
+You can easily count the number of empty lines in a file using grep, as shown in the next example.
+
+$ grep -c "^$" test.txt
+Since test.txt contains only a single empty line, this command returns 1. The empty lines are matched using the regular expression “^$” and their count is printed by leveraging the -c option.
+
+43. Find Multiple Patterns
+
+Till now, we’ve focused on finding a single pattern. The grep utility also enables users to search for lines with multiple patterns at the same time. Take a look at the below example commands to see how this works.
+
+$ grep -e 'sample' -e 'file' test.txt
+$ grep -e 'sample' test.txt | grep -e 'file'
+$ grep -e 'sample\| file' test.txt
+All of the above commands will print the lines that contain both ‘sample’ and ‘file’.
+
+44. Match Valid Email Addresses
+
+Many seasoned programmers like to validate user input themselves. Luckily, it’s very easy to validate input data like IP and emails using grep regular expressions. The following command will match all valid email addresses.
+
+$ grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" /path/to/data
+This command is extremely efficient and matches up to 99% valid email addresses at ease. You can use egrep to speed up the process.
+
+multiple patterns
+
+Miscellaneous grep Commands
+
+The grep utility offers many more useful command combinations that enable further operations on data. We’re discussing a few seldom used but essential commands in this section.
+
+45. Select Patterns from Files
+
+You can select your regular expression patterns for grep from pre-defined files quite easily. Use the -f option for this.
+
+$ echo "sample"> file
+$ grep -f file test.txt
+We’re creating an input file containing one pattern using the echo command. The second command demonstrates file input for grep.
+
+46. Control Contexts
+
+You can easily control grep’s output context using the options -A, -B, and -C. The following commands show them in action.
+
+$ grep -A2 'file' test.txt
+$ grep -B2 'file' test.txt
+$ grep -C3 'Linux' test.txt
+The first example shows the next 2 lines after the match, the second example shows the previous 2, and the last example shows both.
+
+47. Suppress Error Messages
+
+The -s option allows users to suppress the default error messages shown by grep in case of nonexistent or unreadable files.
+
+$ grep -s 'file' testing.txt
+$ grep −−no-messages 'file' testing.txt
+Although there’s no file named testing.txt in my working directory, grep doesn’t issue any error message for this command.
+
+48. Display Version Information
+
+The grep utility is much older than Linux itself and dates back to the early days of Unix. Use the next command if you want to get grep’s version information.
+
+$ grep -V
+$ grep --version
+49. Display Help Page
+
+The help page for grep contains a summarized list of all available functions. It helps to overcome many issues directly from the terminal.
+
+$ grep --help
+This command will invoke the help page for grep.
+
+50. Consult Documentation
+
+The grep documentation is extremely detailed and provides a thorough introduction to available features and the usage of regular expressions. You can consult the manual page for grep using the below command.
+
+$ man grep
+Ending Thoughts
+
+Since you can create any combination of commands using grep’s robust CLI options, it’s hard to encapsulate everything about the grep command in a single guide. However, our editors have tried their best to outline almost every practical grep example to help you familiarize yourself with it much better. We suggest you practice as many of these commands possible and find ways to incorporate grep into your day to day file processing. Although you may face newer obstacles each day, this is the only way to really master the Linux grep command.
+
+Mommy, I found it! — 15 Practical Linux Find Command Examples
+by SathiyaMoorthy on March 4, 2009
+Finding stuff in the beach with Mommy.Photo courtesy of Qole Pejorian
+Apart from the basic operation of looking for files under a directory structure, you can also perform several practical operations using find command that will make your command line journey easy.
+
+In this article, let us review 15 practical examples of Linux find command that will be very useful to both newbies and experts.
+
+
+First, create the following sample empty files under your home directory to try some of the find command examples mentioned below.
+
+# vim create_sample_files.sh
+touch MybashProgram.sh
+touch mycprogram.c
+touch MyCProgram.c
+touch Program.c
+
+mkdir backup
+cd backup
+
+touch MybashProgram.sh
+touch mycprogram.c
+touch MyCProgram.c
+touch Program.c
+
+# chmod +x create_sample_files.sh
+
+# ./create_sample_files.sh
+
+# ls -R
+.:
+backup                  MybashProgram.sh  MyCProgram.c
+create_sample_files.sh  mycprogram.c      Program.c
+
+./backup:
+MybashProgram.sh  mycprogram.c  MyCProgram.c  Program.c
+1. Find Files Using Name
+
+This is a basic usage of the find command. This example finds all files with name — MyCProgram.c in the current directory and all its sub-directories.
+
+# find -name "MyCProgram.c"
+./backup/MyCProgram.c
+./MyCProgram.c
+2. Find Files Using Name and Ignoring Case
+
+This is a basic usage of the find command. This example finds all files with name — MyCProgram.c (ignoring the case) in the current directory and all its sub-directories.
+
+# find -iname "MyCProgram.c"
+./mycprogram.c
+./backup/mycprogram.c
+./backup/MyCProgram.c
+./MyCProgram.c
+3. Limit Search To Specific Directory Level Using mindepth and maxdepth
+
+Find the passwd file under all sub-directories starting from root directory.
+
+# find / -name passwd
+./usr/share/doc/nss_ldap-253/pam.d/passwd
+./usr/bin/passwd
+./etc/pam.d/passwd
+./etc/passwd
+
+Find the passwd file under root and one level down. (i.e root — level 1, and one sub-directory — level 2)
+
+# find -maxdepth 2 -name passwd
+./etc/passwd
+
+Find the passwd file under root and two levels down. (i.e root — level 1, and two sub-directories — level 2 and 3 )
+
+# find / -maxdepth 3 -name passwd
+./usr/bin/passwd
+./etc/pam.d/passwd
+./etc/passwd
+
+Find the password file between sub-directory level 2 and 4.
+
+ # find -mindepth 3 -maxdepth 5 -name passwd
+./usr/bin/passwd
+./etc/pam.d/passwd
+4. Executing Commands on the Files Found by the Find Command.
+
+In the example below, the find command calculates the md5sum of all the files with the name MyCProgram.c (ignoring case). {} is replaced by the current file name.
+
+# find -iname "MyCProgram.c" -exec md5sum {} \;
+d41d8cd98f00b204e9800998ecf8427e  ./mycprogram.c
+d41d8cd98f00b204e9800998ecf8427e  ./backup/mycprogram.c
+d41d8cd98f00b204e9800998ecf8427e  ./backup/MyCProgram.c
+d41d8cd98f00b204e9800998ecf8427e  ./MyCProgram.c
+5. Inverting the match.
+
+Shows the files or directories whose name are not MyCProgram.c .Since the maxdepth is 1, this will look only under current directory.
+
+# find -maxdepth 1 -not -iname "MyCProgram.c"
+.
+./MybashProgram.sh
+./create_sample_files.sh
+./backup
+./Program.c
+6. Finding Files by its inode Number.
+
+Every file has an unique inode number, using that we can identify that file. Create two files with similar name. i.e one file with a space at the end.
+
+# touch "test-file-name"
+
+# touch "test-file-name "
+[Note: There is a space at the end]
+
+# ls -1 test*
+test-file-name
+test-file-name
+
+From the ls output, you cannot identify which file has the space at the end. Using option -i, you can view the inode number of the file, which will be different for these two files.
+
+# ls -i1 test*
+16187429 test-file-name
+16187430 test-file-name
+
+You can specify inode number on a find command as shown below. In this example, find command renames a file using the inode number.
+
+# find -inum 16187430 -exec mv {} new-test-file-name \;
+
+# ls -i1 *test*
+16187430 new-test-file-name
+16187429 test-file-name
+
+You can use this technique when you want to do some operation with the files which are named poorly as shown in the example below. For example, the file with name — file?.txt has a special character in it. If you try to execute “rm file?.txt”, all the following three files will get removed. So, follow the steps below to delete only the “file?.txt” file.
+
+# ls
+file1.txt  file2.txt  file?.txt
+
+Find the inode numbers of each file.
+
+# ls -i1
+804178 file1.txt
+804179 file2.txt
+804180 file?.txt
+
+Use the inode number to remove the file that had special character in it as shown below.
+
+# find -inum 804180 -exec rm {} \;
+
+# ls
+file1.txt  file2.txt
+[Note: The file with name "file?.txt" is now removed]
+7. Find file based on the File-Permissions
+
+Following operations are possible.
+
+Find files that match exact permission
+Check whether the given permission matches, irrespective of other permission bits
+Search by giving octal / symbolic representation
+
+For this example, let us assume that the directory contains the following files. Please note that the file-permissions on these files are different.
+
+# ls -l
+total 0
+-rwxrwxrwx 1 root root 0 2009-02-19 20:31 all_for_all
+-rw-r--r-- 1 root root 0 2009-02-19 20:30 everybody_read
+---------- 1 root root 0 2009-02-19 20:31 no_for_all
+-rw------- 1 root root 0 2009-02-19 20:29 ordinary_file
+-rw-r----- 1 root root 0 2009-02-19 20:27 others_can_also_read
+----r----- 1 root root 0 2009-02-19 20:27 others_can_only_read
+
+Find files which has read permission to group. Use the following command to find all files that are readable by the world in your home directory, irrespective of other permissions for that file.
+
+# find . -perm -g=r -type f -exec ls -l {} \;
+-rw-r--r-- 1 root root 0 2009-02-19 20:30 ./everybody_read
+-rwxrwxrwx 1 root root 0 2009-02-19 20:31 ./all_for_all
+----r----- 1 root root 0 2009-02-19 20:27 ./others_can_only_read
+-rw-r----- 1 root root 0 2009-02-19 20:27 ./others_can_also_read
+
+Find files which has read permission only to group.
+
+# find . -perm g=r -type f -exec ls -l {} \;
+----r----- 1 root root 0 2009-02-19 20:27 ./others_can_only_read
+
+Find files which has read permission only to group [ search by octal ]
+
+# find . -perm 040 -type f -exec ls -l {} \;
+----r----- 1 root root 0 2009-02-19 20:27 ./others_can_only_read
+8. Find all empty files (zero byte file) in your home directory and its subdirectory
+
+Most files of the following command output will be lock-files and place holders created by other applications.
+
+# find ~ -empty
+
+List all the empty files only in your home directory.
+
+# find . -maxdepth 1 -empty
+
+List only the non-hidden empty files only in the current directory.
+
+# find . -maxdepth 1 -empty -not -name ".*"
+9. Finding the Top 5 Big Files
+
+The following command will display the top 5 largest file in the current directory and its subdirectory. This may take a while to execute depending on the total number of files the command has to process.
+
+# find . -type f -exec ls -s {} \; | sort -n -r | head -5
+10. Finding the Top 5 Small Files
+
+Technique is same as finding the bigger files, but the only difference the sort is ascending order.
+
+# find . -type f -exec ls -s {} \; | sort -n  | head -5
+
+In the above command, most probably you will get to see only the ZERO byte files ( empty files ). So, you can use the following command to list the smaller files other than the ZERO byte files.
+
+# find . -not -empty -type f -exec ls -s {} \; | sort -n  | head -5
+11. Find Files Based on file-type using option -type
+
+Find only the socket files.
+
+# find . -type s
+
+Find all directories
+
+# find . -type d
+
+Find only the normal files
+
+# find . -type f
+
+Find all the hidden files
+
+# find . -type f -name ".*"
+
+Find all the hidden directories
+
+# find -type d -name ".*"
+12. Find files by comparing with the modification time of other file.
+
+Show files which are modified after the specified file. The following find command displays all the files that are created/modified after ordinary_file.
+
+# ls -lrt
+total 0
+-rw-r----- 1 root root 0 2009-02-19 20:27 others_can_also_read
+----r----- 1 root root 0 2009-02-19 20:27 others_can_only_read
+-rw------- 1 root root 0 2009-02-19 20:29 ordinary_file
+-rw-r--r-- 1 root root 0 2009-02-19 20:30 everybody_read
+-rwxrwxrwx 1 root root 0 2009-02-19 20:31 all_for_all
+---------- 1 root root 0 2009-02-19 20:31 no_for_all
+
+# find -newer ordinary_file
+.
+./everybody_read
+./all_for_all
+./no_for_all
+13. Find Files by Size
+
+Using the -size option you can find files by size.
+
+Find files bigger than the given size
+
+# find ~ -size +100M
+
+Find files smaller than the given size
+
+# find ~ -size -100M
+
+Find files that matches the exact given size
+
+# find ~ -size 100M
+
+Note: – means less than the give size, + means more than the given size, and no symbol means exact given size.
+
+14. Create Alias for Frequent Find Operations
+
+If you find some thing as pretty useful, then you can make it as an alias. And execute it whenever you want.
+
+
+Remove the files named a.out frequently.
+
+# alias rmao="find . -iname a.out -exec rm {} \;"
+# rmao
+
+Remove the core files generated by c program.
+
+# alias rmc="find . -iname core -exec rm {} \;"
+# rmc
+15. Remove big archive files using find command
+
+The following command removes *.zip files that are over 100M.
+
+# find / -type f -name *.zip -size +100M -exec rm -i {} \;"
+Remove all *.tar file that are over 100M using the alias rm100m (Remove 100M). Use the similar concepts and create alias like rm1g, rm2g, rm5g to remove file size greater than 1G, 2G and 5G respectively.
+
+# alias rm100m="find / -type f -name *.tar -size +100M -exec rm -i {} \;"
+# alias rm1g="find / -type f -name *.tar -size +1G -exec rm -i {} \;"
+# alias rm2g="find / -type f -name *.tar -size +2G -exec rm -i {} \;"
+# alias rm5g="find / -type f -name *.tar -size +5G -exec rm -i {} \;"
+
+# rm100m
+# rm1g
+# rm2g
+# rm5g
+
+Daddy, I found it!, 15 Awesome Linux Find Command Examples (Part2)
+by SathiyaMoorthy on June 29, 2009
+Find Command Examples on Ubuntu, Debian, Fedora, CentOS, RedHat and AIXA while back we reviewed 15 practical find command examples (Part I). Find command can do lot more than just searching for files based on name.
+ 
+In this article (Part 2), let us discuss 15 advanced examples of find command including — finding files based on the time it is accessed, modified or changed, finding files comparatively, performing operation on found files etc.,
+ 
+Ramesh Natarajan: That is my sweet little daughter in that picture. She was very happy to spot the sea lion in the California Long Beach Aquarium.
+
+Find Files Based on Access / Modification / Change Time
+
+You can find files based on following three file time attribute.
+
+Access time of the file. Access time gets updated when the file accessed.
+Modification time of the file. Modification time gets updated when the file content modified.
+Change time of the file. Change time gets updated when the inode data changes.
+ 
+In the following examples, the difference between the min option and the time option is the argument.
+
+min argument treats its argument as minutes. For example, min 60 = 60 minutes (1 hour).
+time argument treats its argument as 24 hours. For example, time 2 = 2*24 hours (2 days).
+While doing the 24 hours calculation, the fractional parts are ignored so 25 hours is taken as 24 hours, and 47 hours is also taken as 24 hours, only 48 hours is taken as 48 hours. To get more clarity refer the -atime section of the find command man page.
+Example 1: Find files whose content got updated within last 1 hour
+
+To find the files based up on the content modification time, the option -mmin, and -mtime is used. Following is the definition of mmin and mtime from man page.
+
+-mmin n File’s data was last modified n minutes ago.
+-mtime n File’s data was last modified n*24 hours ago.
+ 
+Following example will find files in the current directory and sub-directories, whose content got updated within last 1 hour (60 minutes)
+
+# find . -mmin -60
+ 
+In the same way, following example finds all the files (under root file system /) that got updated within the last 24 hours (1 day).
+
+# find / -mtime -1
+Example 2: Find files which got accessed before 1 hour
+
+To find the files based up on the file access time, the option -amin, and -atime is used. Following is the definition of amin and atime from find man page.
+
+-amin n File was last accessed n minutes ago
+-atime n File was last accessed n*24 hours ago
+ 
+Following example will find files in the current directory and sub-directories, which got accessed within last 1 hour (60 minutes)
+
+# find -amin -60
+ 
+In the same way, following example finds all the files (under root file system /) that got accessed within the last 24 hours (1 day).
+
+# find / -atime -1
+Example 3: Find files which got changed exactly before 1 hour
+
+To find the files based up on the file inode change time, the option -cmin, and -ctime is used. Following is the definition of cmin and ctime from find man page.
+
+-cmin n File’s status was last changed n minutes ago.
+-ctime n File’s status was last changed n*24 hours ago.
+ 
+Following example will find files in the current directory and sub-directories, which changed within last 1 hour (60 minutes)
+
+# find . -cmin -60
+ 
+In the same way, following example finds all the files (under root file system /) that got changed within the last 24 hours (1 day).
+
+# find / -ctime -1
+Example 4: Restricting the find output only to files. (Display only files as find command results)
+
+The above find command’s will also show the directories because directories gets accessed when the file inside it gets accessed. But if you want only the files to be displayed then give -type f in the find command as
+ 
+The following find command displays files that are accessed in the last 30 minutes.
+
+# find /etc/sysconfig -amin -30
+.
+./console
+./network-scripts
+./i18n
+./rhn
+./rhn/clientCaps.d
+./networking
+./networking/profiles
+./networking/profiles/default
+./networking/profiles/default/resolv.conf
+./networking/profiles/default/hosts
+./networking/devices
+./apm-scripts
+[Note: The above output contains both files and directories]
+
+# find /etc/sysconfig -amin -30 -type f
+./i18n
+./networking/profiles/default/resolv.conf
+./networking/profiles/default/hosts
+[Note: The above output contains only files]
+Example 5: Restricting the search only to unhidden files. (Do not display hidden files in find output)
+
+When we don’t want the hidden files to be listed in the find output, we can use the following regex.
+The below find displays the files which are modified in the last 15 minutes. And it lists only the unhidden files. i.e hidden files that starts with a . (period) are not displayed in the find output.
+
+# find . -mmin -15 \( ! -regex ".*/\..*" \)
+Finding Files Comparatively Using Find Command
+
+Human mind can remember things better by reference such as, i want to find files which i edited after editing the file “test”. You can find files by referring to the other files modification as like the following.
+
+Example 6: Find files which are modified after modification of a particular FILE
+
+Syntax: find -newer FILE
+ 
+Following example displays all the files which are modified after the /etc/passwd files was modified. This is helpful, if you want to track all the activities you’ve done after adding a new user.
+
+# find -newer /etc/passwd
+Example 7: Find files which are accessed after modification of a specific FILE
+
+Syntax: find -anewer FILE
+ 
+Following example displays all the files which are accessed after modifying /etc/hosts. If you remember adding an entry to the /etc/hosts and would like to see all the files that you’ve accessed since then, use the following command.
+
+# find -anewer /etc/hosts
+Example 8: Find files whose status got changed after the modification of a specific FILE.
+
+Syntax: find -cnewer FILE
+ 
+Following example displays all the files whose status got changed after modifying the /etc/fstab. If you remember adding a mount point in the /etc/fstab and would like to know all the files who status got changed since then, use the following command.
+
+find -cnewer /etc/fstab
+Perform Any Operation on Files Found From Find Command
+
+We have looked at many different ways of finding files using find command in this article and also in our previous article. If you are not familiar in finding files in different ways, i strongly recommend you to read the part 1.
+ 
+This section explains about how to do different operation on the files from the find command. i.e how to manipulate the files returned by the find command output.
+ 
+We can specify any operation on the files found from find command.
+
+find <CONDITION to Find files> -exec <OPERATION> \;
+ 
+The OPERATION can be anything such as:
+
+rm command to remove the files found by find command.
+mv command to rename the files found.
+ls -l command to get details of the find command output files.
+md5sum on find command output files
+wc command to count the total number of words on find command output files.
+Execute any Unix shell command on find command output files.
+or Execute your own custom shell script / command on find command output files.
+Example 9: ls -l in find command output. Long list the files which are edited within the last 1 hour.
+
+# find -mmin -60
+./cron
+./secure
+
+# find -mmin -60 -exec ls -l {} \;
+-rw-------  1 root root 1028 Jun 21 15:01 ./cron
+-rw-------  1 root root 831752 Jun 21 15:42 ./secure
+Example 10: Searching Only in the Current Filesystem
+
+System administrators would want to search in the root file system, but not in the other mounted partitions. When you have multiple partitions mounted, and if you want to search in /. You can do the following.
+ 
+Following command will search for *.log files starting from /. i.e If you have multiple partitions mounted under / (root), the following command will search all those mounted partitions.
+
+# find / -name "*.log"
+ 
+This will search for the file only in the current file system. Following is the xdev definition from find man page:
+
+-xdev Don’t descend directories on other filesystems.
+ 
+Following command will search for *.log files starting from / (root) and only in the current file system. i.e If you have multiple partitions mounted under / (root), the following command will NOT search all those mounted partitions.
+
+# find / -xdev -name "*.log"
+Example 11: Using more than one { } in same command
+
+Manual says only one instance of the {} is possible. But you can use more than one {} in the same command as shown below.
+
+# find -name "*.txt" cp {} {}.bkup \;
+ 
+Using this {} in the same command is possible but using it in different command it is not possible, say you want to rename the files as following, which will not give the expected result.
+
+find -name "*.txt" -exec mv {} `basename {} .htm`.html \;
+Example 12: Using { } in more than one instance.
+
+You can simulate it by writing a shell script as shown below.
+
+# mv "$1" "`basename "$1" .htm`.html"
+ 
+These double quotes are to handle spaces in file name. And then call that shell script from the find command as shown below.
+
+find -name "*.html" -exec ./mv.sh '{}' \;
+So for any reason if you want the same file name to be used more than once then writing the simple shell script and passing the file names as argument is the simplest way to do it.
+
+Example 13: Redirecting errors to /dev/null
+
+Redirecting the errors is not a good practice. An experienced user understands the importance of getting the error printed on terminal and fix it.
+ 
+Particularly in find command redirecting the errors is not a good practice. But if you don’t want to see the errors and would like to redirect it to null do it as shown below.
+
+find -name "*.txt" 2>>/dev/null
+ 
+Sometimes this may be helpful. For example, if you are trying to find all the *.conf file under / (root) from your account, you may get lot of “Permission denied” error message as shown below.
+
+$ find / -name "*.conf"
+/sbin/generate-modprobe.conf
+find: /tmp/orbit-root: Permission denied
+find: /tmp/ssh-gccBMp5019: Permission denied
+find: /tmp/keyring-5iqiGo: Permission denied
+find: /var/log/httpd: Permission denied
+find: /var/log/ppp: Permission denied
+/boot/grub/grub.conf
+find: /var/log/audit: Permission denied
+find: /var/log/squid: Permission denied
+find: /var/log/samba: Permission denied
+find: /var/cache/alchemist/printconf.rpm/wm: Permission denied
+[Note: There are two valid *.conf files burned in the "Permission denied" messages]
+ 
+So, if you want to just view the real output of the find command and not the “Permission denied” error message you can redirect the error message to /dev/null as shown below.
+
+$ find / -name "*.conf" 2>>/dev/null
+/sbin/generate-modprobe.conf
+/boot/grub/grub.conf
+[Note: All the "Permission denied" messages are not displayed]
+Example 14: Substitute space with underscore in the file name.
+
+Audio files you download from internet mostly come with the spaces in it. But having space in the file name is not so good for Linux kind of systems. You can use the find and rename command combination as shown below to rename the files, by substituting the space with underscore.
+ 
+The following replaces space in all the *.mp3 files with _
+
+$ find . -type f -iname “*.mp3″ -exec rename “s/ /_/g” {} \;
+Example 15: Executing two find commands at the same time
+
+As shown in the examples of the find command in its manual page, the following is the syntax which can be used to execute two commands in single traversal.
+ 
+The following find command example, traverse the filesystem just once, listing setuid files and directories into /root/suid.txt and large files into /root/big.txt.
+
+# find /    \( -perm -4000 -fprintf /root/suid.txt '%#m %u %p\n' \) , \
+ \( -size +100M -fprintf /root/big.txt '%-10s %p\n' \)
+Our Other 15 Example Series Articles
+
+15 Practical Unix Find Command Examples – Part 1
+15 Practical Linux Grep Command Examples
+Master Unix Command Line History With 15 Examples
+Manipulate Audio Files Using 15 Awesome Sox Command Examples (Sound eXchange)
+15 Advanced PostgreSQL Command Examples
+15 Excellent Google Search Hacks, Tips and Tricks
+15 Advanced PostgreSQL DBA Examples
+15 Practical Usages of Mysqladmin Command Examples
+15 Awesome Linux Cron Job Examples
+ 
+If you need to return, bookmark this page at del.icio.us for handy reference.
+
+If you enjoyed this article, you might also like..
+
+50 Linux Sysadmin Tutorials
+50 Most Frequently Used Linux Commands (With Examples)
+Top 25 Best Linux Performance Monitoring and Debugging Tools
+Mommy, I found it! – 15 Practical Linux Find Command Examples
+Linux 101 Hacks 2nd Edition eBook Linux 101 Hacks Book
+Awk Introduction – 7 Awk Print Examples
+Advanced Sed Substitution Examples
+8 Essential Vim Editor Navigation Fundamentals
+25 Most Frequently Used Linux IPTables Rules Examples
+Turbocharge PuTTY with 12 Powerful Add-Ons
